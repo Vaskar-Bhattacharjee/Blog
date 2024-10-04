@@ -1,8 +1,8 @@
 import {useState}from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import{login as authLogin} from '../store/authSlice'
-import {Button, Input, Logo} from './index'
-import authService from '../appwrite/auth'
+import {Button, Input} from './index'
+import service from '../appwrite/auth'
 import {useForm} from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 
@@ -19,9 +19,9 @@ function Login() {
     const login = async (data) => {
         setError("")
         try {
-          const session = await authService.login({...data})
+          const session = await service.login({...data})
           if (session) {
-            const userData = await authService.getCurrentUser()
+            const userData = await service.getCurrentUser()
             if (userData) dispatch(authLogin(userData))
             navigate('/')
           }
@@ -31,12 +31,12 @@ function Login() {
     }
     return (
         <section>
-        <div className="flex items-center justify-center px-4 py-15 sm:px-6 sm:py-16 lg:px-8 lg:py-10">
-          <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md ">
+        <div className="flex items-center justify-center px-4 py-15 sm:px-6 sm:py-16 lg:px-8 lg:py-10 sm:mb-3">
+          <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md mt-4 ">
             <h2 className="text-center text-2xl font-bold leading-tight text-black">
             Log In to your account
             </h2>
-            <p className="mt-2 text-center text-base text-gray-600">
+            <p className="mt-0 text-center text-base text-gray-600">
               Don't have an account?{" "}
               <Link
                               to="/signup"
@@ -55,6 +55,7 @@ function Login() {
                              
                               placeholder="Enter your email"
                               type="email"
+                              autoComplete="new-email" 
                               {...register("email", {
                                   required: true,
                                   validate: {
@@ -70,6 +71,7 @@ function Login() {
                   <Input
                               
                               type="password"
+                              autoComplete="new-password" 
                               placeholder="Enter your password"
                               {...register("password", {
                                   required: true,})}
@@ -78,11 +80,15 @@ function Login() {
                   </div>
                 </div>
                 <div>
-                <Button type="submit" >
+                <Button type="submit"
+                className='w-full'
+                >
                                   Log In
                               </Button>
                 </div>
+               
               </div>
+              <p className="mt-2 m-3 text-center text-base text-gray-600"> forget Password? <Link to="/password-recovery" className="font-medium text-primary transition-all duration-200 hover:underline" >click here</Link> </p>
             </form>
       
           </div>

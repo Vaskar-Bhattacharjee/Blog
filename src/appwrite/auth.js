@@ -97,6 +97,42 @@ export class AuthService {
             console.log("Appwrite serive :: logout :: error", error);
         }
     }
+    async passwordRecover(email) {
+        try {
+            const redirectUrl = "http://localhost:5173/confirm-password";
+    
+            await this.account.createRecovery(email, redirectUrl);
+           
+            console.log("Recovery email sent successfully.");
+        } catch (error) {
+            console.log('Appwrite error::passwordRecover::', error);
+            
+            console.error("Failed to send recovery email.");
+        }
+    }
+    async updatePassword(newPassword) {
+        try {
+            const response = await this.account.updatePassword(newPassword);
+            console.log('Password updated successfully:', response);
+            return response;
+        } catch (error) {
+            console.error('Error updating password:', error);
+            throw error;
+        }
+    }
+
+    // Fixed the recursive issue here by calling the correct method
+    async updateRecovery(userId, secret, newPassword) {
+        try {
+            const response = await this.account.updateRecovery(userId, secret, newPassword);
+            console.log('Password recovery successful:', response);
+            return response;
+        } catch (error) {
+            console.error('Error updating password during recovery:', error);
+            throw error;
+        }
+    }
+    
 }
 
 
