@@ -1,24 +1,38 @@
-import {useState} from 'react'
+import { useState, useEffect } from 'react'
 import authService from '../appwrite/auth'
-import {Link ,useNavigate} from 'react-router-dom'
-import {login} from '../store/authSlice'
-import {Button, Input, Logo} from './index.js'
-import {useDispatch} from 'react-redux'
-import {useForm} from 'react-hook-form'
+import { Link, useNavigate } from 'react-router-dom'
+import { login } from '../store/authSlice'
+import { Button, Input } from './index.js'
+import { useDispatch } from 'react-redux'
+import { useForm } from 'react-hook-form'
 
 function Signup() {
     const navigate = useNavigate()
     const [error, setError] = useState("")
     const dispatch = useDispatch()
-    const {register, handleSubmit} = useForm()
+    const { register, handleSubmit, watch, formState: { errors } } = useForm()
 
-    const create = async(data) => {
+    // Track validation state for password
+    const [passwordValidation, setPasswordValidation] = useState({
+        hasUpperCase: false,
+        hasNumber: false,
+        hasSpecialChar: false,
+        minLength: false
+    })
+
+    // State for toggling password visibility
+    const [showPassword, setShowPassword] = useState(false)
+
+    // Track whether the password field has been touched (triggered)
+    const [isPasswordTouched, setIsPasswordTouched] = useState(false)
+
+    const create = async (data) => {
         setError("")
         try {
             const userData = await authService.createAccount(data)
             if (userData) {
-                const userData =  authService.getCurrentUser()
-                if(userData) dispatch(login(userData));
+                const userData = authService.getCurrentUser()
+                if (userData) dispatch(login(userData))
                 navigate("/")
             }
         } catch (error) {
@@ -26,86 +40,114 @@ function Signup() {
         }
     }
 
-  return (
+    // Watch the password field for real-time updates
+    const password = watch('password', '')
 
-    <section>
-  <div className="flex items-center justify-center px-4 py-15 sm:px-6 sm:py-16 lg:px-8 lg:py-10">
-    <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md ">
-      <h2 className="text-center text-2xl font-bold leading-tight text-black">
-        Sign up to create account
-      </h2>
-      <p className="mt-2 text-center text-base text-gray-600">
-        Already have an account?{" "}
-        <Link
-                        to="/login"
-                        className="font-medium text-primary transition-all duration-200 hover:underline"
-                    >
-                        Sign In                     
-        </Link>
-      </p>
-      <form onSubmit={handleSubmit(create)} className="mt-8">
-        <div className="space-y-5">
-          <div>
-            <div className="mt-2">
-            <Input
-                    
-                        placeholder="Enter your full name"
-                        {...register("name", {
-                            required: true,
-                        })}
-                        />
+    // Use useEffect to update the password validation state as the user types
+    useEffect(() => {
+        setPasswordValidation({
+            hasUpperCase: /[A-Z]/.test(password),
+            hasNumber: /\d/.test(password),
+            hasSpecialChar: /[@$!%*?&#]/.test(password),
+            minLength: password.length >= 6
+        })
+    }, [password])
+
+    // Toggle password visibility
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword)
+    }
+
+    return (
+        <section>
+            <div className="flex items-center justify-center px-4 py-15 sm:px-6 sm:py-16 lg:px-8 lg:py-10">
+                <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
+                    <h2 className="text-center text-2xl font-bold leading-tight text-black">
+                        Sign up to create account
+                    </h2>
+                    <p className="mt-2 text-center text-base text-gray-600">
+                        Already have an account?{" "}
+                        <Link to="/login" className="font-medium text-primary transition-all duration-200 hover:underline">
+                            Sign In
+                        </Link>
+                    </p>
+                    <form onSubmit={handleSubmit(create)} className="mt-8">
+                        <div className="space-y-5">
+                            <div>
+                                <Input
+                                    placeholder="Enter your full name"
+                                    {...register("name", { required: true })}
+                                />
+                            </div>
+                            <div>
+                                <Input
+                                    placeholder="Enter your email"
+                                    type="email"
+                                    autoComplete="new-email"
+                                    {...register("email", {
+                                        required: true,
+                                        pattern: {
+                                            value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+                                            message: "Email address must be a valid address"
+                                        }
+                                    })}
+                                />
+                                {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+                            </div>
+                            <div className="relative">
+                                <Input
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Enter your password"
+                                    autoComplete="new-password"
+                                    {...register("password", {
+                                        required: true,
+                                    })}
+                                    // Set isPasswordTouched to true when the user focuses on the password field
+                                    onFocus={() => setIsPasswordTouched(true)}
+                                />
+                                {/* Eye Icon for toggling visibility */}
+                                <span
+                                    onClick={togglePasswordVisibility}
+                                    className="absolute right-3 top-3 cursor-pointer text-gray-500"
+                                >
+                                    {showPassword ? '👁️' : '👁️‍🗨️'}
+                                </span>
+
+                                {/* Password Validation Messages (only show when the password field is triggered) */}
+                                {isPasswordTouched && (
+                                    <ul className="text-sm text-gray-600 mt-2 flex flex-col items-start space-y-2">
+                                        <li className={passwordValidation.minLength ? 'text-green-500' : 'text-red-500'}>
+                                            Password must be at least 6 characters long
+                                        </li>
+                                        <li className={passwordValidation.hasUpperCase ? 'text-green-500' : 'text-red-500'}>
+                                            Password must contain at least one uppercase letter
+                                        </li>
+                                        <li className={passwordValidation.hasNumber ? 'text-green-500' : 'text-red-500'}>
+                                            Password must contain at least one number
+                                        </li>
+                                        <li className={passwordValidation.hasSpecialChar ? 'text-green-500' : 'text-red-500'}>
+                                            Password must contain at least one special character
+                                        </li>
+                                    </ul>
+                                )}
+                            </div>
+                            <div>
+                                <Button type="submit" className='w-full'>
+                                    Create Account
+                                </Button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-          </div>
-          <div>
-
-            <div className="mt-2">
-            <Input
-                        
-                        placeholder="Enter your email"
-                        autoComplete="new-email" 
-                        type="email"
-                        {...register("email", {
-                            required: true,
-                            validate: {
-                                matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
-                                "Email address must be a valid address",
-                            }
-                        })}
-                        />
-            </div> 
-          </div> 
-          <div>
-            <div className="mt-2">
-            <Input
-                      
-                        type="password"
-                        placeholder="Enter your password"
-                        autoComplete="new-password" 
-                        {...register("password", {
-                            required: true,})}
-                        />
- 
-            </div>
-          </div>
-          <div>
-          <Button type="submit" 
-          className='w-full'
-          >
-                            Create Account
-                        </Button>
-          </div>
-        </div>
-      </form>
-
-    </div>
-  </div>
-</section>
-
-  
-  )
+        </section>
+    )
 }
 
 export default Signup
+
+
+
 
 //   <div className= "flex items-center justify-center">
 //             <div className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}>
