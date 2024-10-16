@@ -105,6 +105,7 @@ function Signup() {
                                     // Set isPasswordTouched to true when the user focuses on the password field
                                     onFocus={() => setIsPasswordTouched(true)}
                                     onBlur={() => setIsPasswordTouched(false)}
+                                    
                                 />
                                 {/* Eye Icon for toggling visibility */}
                                 <span
