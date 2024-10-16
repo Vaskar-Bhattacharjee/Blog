@@ -61,7 +61,7 @@ function Header() {
         <nav className="flex items-center justify-between">
           <div className="mr-6">
             <Link to="/">
-              <Logo width="70px" />
+              <Logo width="150px" />
             </Link>
           </div>
 
