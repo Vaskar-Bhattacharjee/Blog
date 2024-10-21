@@ -41,7 +41,8 @@ function RTE({name, control, label,
                                   tools: { title: 'Tools', items: 'spellchecker code wordcount' },
                                   table: { title: 'Table', items: 'inserttable | cell row column | advtablesort' },
                                   help: { title: 'Help', items: 'help' }
-                                },    
+                                },  
+                                readonly: false,  
                             content_style: `body { font-family: Arial, sans-serif; }`
                         }}
                         onEditorChange={onChange}
