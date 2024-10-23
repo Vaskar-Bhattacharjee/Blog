@@ -15,10 +15,13 @@ export class Service{
     }
 
     async createPost({title, slug, content, featureimage, status, userId}){
+        console.log("671751d70008da16e729"); //conf.datavaseid
+        console.log("671751f8002849f5b315"); //conf.appwriteCollectionId
+        
         try {
             return await this.databases.createDocument(
-                "66ab13b30035f032768b",
-                "66ab13ee002bcff940cb",
+           "671751d70008da16e729", //conf.appwriteDatabaseId
+           "671751f8002849f5b315",//    conf.appwriteCollectionId,
                 slug,
                 {
                     title,
