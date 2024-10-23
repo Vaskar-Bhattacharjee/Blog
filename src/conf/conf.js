@@ -8,7 +8,14 @@ const conf = {
     appwriteBucketId: import.meta.env.VITE_APP_APPWRITE_BUCKET_ID,
 };
 console.log('Appwrite URL:', conf.appwriteUrl);
-console.log(conf.appwriteProjectId); // Log this to verify it's correctly assigned
+console.log(conf.appwriteProjectId);
+console.log(conf.appwriteBucketId);
+console.log(conf.appwriteDatabaseId);
+console.log(conf.appwriteCollectionId);
+
+
+
+// Log this to verify it's correctly assigned
 
 //THERE was an issue with the import.meta.env.VITE_APPWRITE_URL
 
