@@ -27,8 +27,7 @@ function Login() {
             navigate('/')
           }
         }  catch (err) {
-          // Handle the error message, e.g., incorrect password
-          setError(err?.message || JSON.stringify(err));
+          setError("Incorrect email or password. Please try again.");
       }       
     }
     return (
