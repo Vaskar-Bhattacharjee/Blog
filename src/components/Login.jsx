@@ -25,9 +25,14 @@ function Login() {
             if (userData) dispatch(authLogin(userData))
             navigate('/')
           }
-        } catch (error) {
-            setError(error);
-        }        
+        }  catch (error) {
+          // Handle the error message, e.g., incorrect password
+          if (error.message) {
+              setError("Incorrect email or password. Please try again.");  // Customize this message as needed
+          } else {
+              setError("An unexpected error occurred. Please try again later.");
+          }
+      }       
     }
     return (
         <section>
