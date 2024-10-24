@@ -28,7 +28,7 @@ function Login() {
           }
         }  catch (error) {
           // Handle the error message, e.g., incorrect password
-          if (error.message) {
+          if (error && error.message) {
               setError("Incorrect email or password. Please try again.");  // Customize this message as needed
           } else {
               setError("An unexpected error occurred. Please try again later.");
