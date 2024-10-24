@@ -10,7 +10,7 @@ export default function Post() {
     const [loading, setLoading] = useState(true);
     const { slug } = useParams();
     const navigate = useNavigate();
-    const userData = useSelector((state) => state.auth.userData);
+    const userData = useSelector((state) => state.auth.userData); // User data from Redux
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -37,6 +37,13 @@ export default function Post() {
         fetchPost();
     }, [slug, navigate]);
 
+    useEffect(() => {
+        // Re-run when userData or post changes to update loading state properly
+        if (userData && post) {
+            setLoading(false); 
+        }
+    }, [userData, post]);
+
     const deletePost = async () => {
         if (!post) return; 
         try {
@@ -50,8 +57,8 @@ export default function Post() {
         }
     };
 
-    if (loading) {
-        return <div className="text-center py-10">Loading...</div>;
+    if (loading || !userData) {
+        return <div className="text-center py-10">Loading...</div>; // Ensure both post and userData are loaded
     }
 
     const isAuthor = post && userData ? post.userId === userData.$id : false;
@@ -77,15 +84,14 @@ export default function Post() {
                         </div>
                         {isAuthor && (
                             <div className="flex justify-center space-x-4">
-                               <div className='w-full' >
+                               <div className='w-full'>
                                <Link to={`/edit-post/${post.$id}`} className="w-full">
                                     <Button className="bg-green-500 hover:bg-green-600 text-white w-full">Edit</Button>
                                 </Link>
                                 </div> 
-                                <div className='w-full' >
+                                <div className='w-full'>
                                 <Button onClick={deletePost} className="bg-red-500 hover:bg-red-600 text-white w-full">Delete</Button>
                                 </div>
-                                
                             </div>
                         )}
                     </div>
