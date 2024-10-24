@@ -13,6 +13,7 @@ function Login() {
     const [error, setError] = useState("")
     const dispatch = useDispatch();
     const {register, handleSubmit} = useForm()
+    const [isPasswordCorrect, setIsPasswordCorrect] = useState("")
      
       
     
@@ -93,8 +94,13 @@ function Login() {
                 </div>
                
               </div>
-              <p className="mt-2 m-3 text-center text-base text-gray-600"> forget Password? <Link to="/password-recovery" className="font-medium text-primary transition-all duration-200 hover:underline" >click here</Link> </p>
+              <p className="mt-2 m-3 text-center text-base text-gray-600"> forget Password? <Link to="/password-recovery" className="font-medium text-primary transition-all duration-200 hover:underline" >click here</Link> </p>           
             </form>
+            {error && (
+                        <p className="text-red-500 text-center mt-4">
+                            {error}
+                        </p>
+                    )}
       
           </div>
         </div>
