@@ -25,17 +25,15 @@ export class AuthService {
             console.log(' Failed to create account:', error);
         }
     }
-        async login({ email, password}){
+    async login({ email, password }) {
         try {        
-            return await this.account.createEmailPasswordSession( email,
-                        password)
-            }
-         catch (error) {
-          console.log('Failed to login:', error);
-        
+            return await this.account.createEmailPasswordSession(email, password);
+        } catch (error) {
+            console.log('Failed to login:', error);
+            throw error; // Rethrow the error so it can be caught in the component
         }
-        
     }
+    
 
     async getCurrentUser() {
         try {
