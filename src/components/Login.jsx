@@ -13,9 +13,9 @@ function Login() {
   const { register, handleSubmit } = useForm();
 
   const login = async (data) => {
-    setError('');
+    setError(''); // Clear previous errors
+  
     try {
-    
       const session = await service.login({ ...data });
       
       if (session) {
@@ -24,13 +24,11 @@ function Login() {
         navigate('/');
       }
     } catch (err) {
-
-      console.log('Incorrect password:' ,err);
-      
-      console.log('Error check: Incorrect email or password. Please try again.');
+      console.log('Error object:', err); // For debugging
       setError('Incorrect email or password. Please try again.');
     }
   };
+  
 
   return (
     <section>
