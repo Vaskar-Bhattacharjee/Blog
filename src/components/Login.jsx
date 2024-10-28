@@ -23,6 +23,9 @@ function Login() {
         navigate('/');
       }
     } catch (err) {
+
+      console.log('Incorrect password:' , err);
+      
       console.log('Error check: Incorrect email or password. Please try again.');
       setError('Incorrect email or password. Please try again.');
     }
