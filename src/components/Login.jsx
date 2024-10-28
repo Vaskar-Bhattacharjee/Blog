@@ -25,7 +25,7 @@ function Login() {
       }
     } catch (err) {
       console.log('Error object:', err); // Optional: Keep for further debugging if needed
-      setError('Incorrect email or password. Please try again.');
+      setError(' Appwrite Authentication Failed. Incorrect email or password. Please try again.');
     }
   };
   
