@@ -85,11 +85,7 @@ function Login() {
                 </Button>
               </div>
             </div>
-            {error && (
-              <p className="text-red-500 text-center mt-4">
-                {error}
-              </p>
-            )}
+
             <p className="mt-2 m-3 text-center text-base text-gray-600">
               Forget Password?{' '}
               <Link to="/password-recovery" className="font-medium text-primary transition-all duration-200 hover:underline">
@@ -97,6 +93,11 @@ function Login() {
               </Link>
             </p>
           </form>
+          {error && (
+              <p className="text-red-500 text-center mt-4">
+                {error}
+              </p>
+            )}
         </div>
       </div>
     </section>
