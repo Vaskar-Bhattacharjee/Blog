@@ -16,7 +16,6 @@ function Login() {
     setError(''); // Clear previous errors
   
     try {
-      throw new Error('Simulated error'); // Temporary line to test catch
       const session = await service.login({ ...data });
       
       if (session) {
@@ -25,10 +24,11 @@ function Login() {
         navigate('/');
       }
     } catch (err) {
-      console.log('Error object:', err); // Check if this logs
+      console.log('Error object:', err); // Optional: Keep for further debugging if needed
       setError(err.message || 'Incorrect email or password. Please try again.');
     }
   };
+  
   
 
   return (
