@@ -13,8 +13,9 @@ function Login() {
   const { register, handleSubmit } = useForm();
 
   const login = async (data) => {
+    setError('');
     try {
-      setError(''); // Reset error state before each login attempt
+    
       const session = await service.login({ ...data });
       
       if (session) {
@@ -24,7 +25,7 @@ function Login() {
       }
     } catch (err) {
 
-      console.log('Incorrect password:' , err);
+      console.log('Incorrect password:' ,err);
       
       console.log('Error check: Incorrect email or password. Please try again.');
       setError('Incorrect email or password. Please try again.');
